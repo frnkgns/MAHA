@@ -9,13 +9,13 @@
 </head>
 <body class="bg-gray-700">
 <!-- component -->
-  <nav class="flex items-center w-screen justify-between flex-wrap bg-white py-4 shadow border-solid border-t-2 border-blue-700">
-          <div class="flex items-center text-gray-800 ml-5">
-            <a href="/" class="font-semibold lgtext-2xl text-xl">MAHA</a>
+  <nav class="flex items-center justify-between bg-white shadow border-blue-700 py-4">
+        <div class="flex items-center text-gray-800 ml-5">
+          <a href="/" class="font-semibold lg:text-2xl text-xl">MAHA</a>
         </div>
 
-        <div class="relative mx-auto text-gray-600 lg:block hidden">
-          <form action="/search" method="GET" class="mb-5">
+        <div class="relative mx-auto text-gray-600 lg:block">
+          <form action="/search" method="GET" class="items-center">
             <input
                 class="border-2 border-gray-300 bg-white h-10 pl-2 pr-8 rounded-lg text-sm focus:outline-none"
                 type="search" name="query" placeholder="Search">
@@ -27,19 +27,6 @@
           </form>
         </div>
   </nav>
-
-  <div id="motherchapterContainer" class="fixed inset-0 h-screen bg-gray-700 bg-opacity-80 justify-center flex hidden">
-    <div class="mt-10 ">
-      <div class="justify-between flex bg-white items-center pl-4 rounded-tl-lg rounded-tr-lg">
-        <p class="text-xs overflox-x-hidden" id="mangaTitle"></p>
-        <button onclick="closeChapModal()" class="p-4 rounded-lg">x</button>
-      </div>
-      
-      <div class="bg-white w-96 h-96 rounded-bl-lg rounded-br-lg"> 
-        <div id="chapterContainer" class="flex flex-wrap gap-2 overflow-y-auto max-h-96"></div>
-      </div>
-    </div>
-  </div>  
 
   <ul class="grid grid-cols-3 ml-5 mt-2">
     <% data.data.forEach(item => { %>
@@ -71,7 +58,18 @@
     <% }) %>
   </ul> 
 
-
+  <div id="motherchapterContainer" class="fixed inset-0 h-screen bg-gray-700 bg-opacity-80 justify-center flex hidden">
+    <div class="mt-10 w-80">
+      <div class="justify-between flex bg-white items-center pl-4 rounded-tl-lg rounded-tr-lg">
+        <p class="text-xs overflox-x-hidden" id="mangaTitle"></p>
+        <button onclick="closeChapModal()" class="p-4 rounded-lg">x</button>
+      </div>
+      
+      <div class="bg-white rounded-bl-lg rounded-br-lg pl-2 pb-2"> 
+        <div id="chapterContainer" class="flex flex-wrap w-80 gap-2 overflow-y-auto max-h-[30rem]"></div>
+      </div>
+    </div>
+  </div>  
 
     
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
@@ -116,7 +114,7 @@
           chapterIDs.forEach((chapter) => {
             const button = document.createElement("button");
             button.textContent = `Chapter ${chapter.attributes.chapter}`; // Button label
-            button.className ="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2";
+            button.className ="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded";
 
             // ✅ Open chapter in new tab when clicked
             button.addEventListener("click", () => {
