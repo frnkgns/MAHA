@@ -36,10 +36,52 @@ app.get('/proxy/:id/:filename', async (req, res) => {
 });
 
 // Home route to serve EJS page
-app.get('/', (req, res) => {
-  // Provide an empty array as a fallback so that data.data exists.
-  res.render('index', { data: { data: [] } });
+app.get("/", async (req, res) => {
+  try {
+    // ✅ Fetch manga data for home page (default list or trending)
+    const resp = await axios({
+      method: "GET",
+      url: `${baseUrl}/manga`,
+      params: {
+        limit: 10, // Fetch 10 manga by default
+      },
+    });
+
+    const searchResults = resp.data.data;
+
+    // ✅ Fetch cover data dynamically for home page
+    const mangaData = await Promise.all(
+      searchResults.map(async (item) => {
+        const coverRel = item.relationships.find(
+          (rel) => rel.type === "cover_art"
+        );
+
+        if (coverRel) {
+          try {
+            const coverResponse = await axios.get(
+              `https://api.mangadex.org/cover/${coverRel.id}`
+            );
+            item.coverFileName = coverResponse.data.data.attributes.fileName;
+          } catch (coverError) {
+            console.error(`Failed to get cover for ${item.id}:`, coverError.message);
+            item.coverFileName = null;
+          }
+        } else {
+          item.coverFileName = null;
+        }
+        return item;
+      })
+    );
+
+    // ✅ Render `index.ejs` with manga data for home page
+    console.log("Manga data for home page:", mangaData);
+    res.render("index.ejs", { data: { data: mangaData } });
+  } catch (error) {
+    console.error("Error fetching manga for home:", error.message);
+    res.status(500).send("Error fetching manga for home.");
+  }
 });
+
 
 app.get("/chapter", async (req, res) => {
   const mangaID = req.query.id;
