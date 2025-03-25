@@ -2,7 +2,6 @@ import express from "express";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
-import cors from "cors";
 
 // Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -14,66 +13,34 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views")); // Update for views folder
 app.use(express.static(path.join(__dirname, "../public"))); // Update for public folder
-app.use(
-  cors({
-    origin: ['http://localhost:3000', 'https://maho-topaz.vercel.app/'],
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'],
-  })
-);
 
 
 const port = 3000;
 const baseUrl = "https://api.mangadex.org";
 const languages = ["en"];
 
-app.get("/", async (req, res) => {
+app.get('/proxy/:id/:filename', async (req, res) => {
+  const { id, filename } = req.params;
+  const imageUrl = `https://uploads.mangadex.org/covers/${id}/${filename}`;
+
   try {
-    // Get manga data
-    const response = await axios.get(`${baseUrl}/manga`);
-    const result = response.data
-  
-    // Fetch cover file names dynamically
-    const mangaData = await Promise.all(
- 
-      result.data.map(async (item) => {
-        const coverRel = item.relationships.find(
-          (rel) => rel.type === "cover_art"
-        );
-
-        if (coverRel) {
-          try {
-            // Fetch cover details to get the correct fileName
-            const coverResponse = await axios.get(
-              `https://api.mangadex.org/cover/${coverRel.id}`
-            );
-            item.coverFileName = coverResponse.data.data.attributes.fileName;
-
-          } catch (coverError) {
-            console.error(
-              `Failed to get cover for ${item.id}:`,
-              coverError.message
-            );
-            item.coverFileName = null;
-          }
-        } else {
-          item.coverFileName = null;
-        }
-        
-        return item;
-
-      })
-    );
-
-    // Render index.ejs with manga data and coverFileName
-    res.render("index.ejs", { data: { data: mangaData } });
-
-  } catch (error) {
-    console.error("Failed to fetch manga data:", error.message);
-    res.render("index.ejs", {
-      error: error.message,
+    const response = await axios({
+      method: 'GET',
+      url: imageUrl,
+      responseType: 'stream',
     });
+
+    res.setHeader('Content-Type', 'image/jpeg');
+    response.data.pipe(res);
+  } catch (error) {
+    console.error(`Error fetching image: ${error.message}`);
+    res.status(500).send('Error fetching image');
   }
+});
+
+// Home route to serve EJS page
+app.get('/', (req, res) => {
+  res.render('index.ejs');
 });
 
 app.get("/chapter", async (req, res) => {
