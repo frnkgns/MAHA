@@ -1,8 +1,17 @@
 import express from "express";
 import axios from "axios";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Fix __dirname for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const app = express();
-app.use(express.static("public"));
+// ✅ Update views and static paths
+app.set("views", path.join(__dirname, "../views")); // Update for views folder
+app.use(express.static(path.join(__dirname, "../public"))); // Update for public folder
 
 const port = 3000;
 const baseUrl = "https://api.mangadex.org";
