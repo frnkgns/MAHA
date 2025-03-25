@@ -127,9 +127,10 @@
             <!-- <p class="w-[1rem]"><%= item.attributes.description.en %></p> -->
       
             <% if (item.coverFileName) { %>
-              <img src="https://uploads.mangadex.org/covers/<%= item.id %>/<%= item.coverFileName %>" 
-                   alt="Cover for <%= item.attributes.title.en %>" 
-                   class="h-44 w-44 rounded-tl-lg rounded-bl-lg object-cover">
+              <img src="https://uploads.mangadex.org/covers/<%= item.id %>/<%= item.coverFileName %>"
+                alt="Cover for <%= item.attributes.title.en %>"
+                class="h-44 w-44 rounded-tl-lg rounded-bl-lg object-cover" />
+
             <% } else { %>
               <p>No cover available</p>
             <% } %>
