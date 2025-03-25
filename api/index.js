@@ -2,6 +2,7 @@ import express from "express";
 import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
+import cors from "cors";
 
 // Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -13,6 +14,14 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../views")); // Update for views folder
 app.use(express.static(path.join(__dirname, "../public"))); // Update for public folder
+app.use(
+  cors({
+    origin: ['http://localhost:3000', 'https://maho-topaz.vercel.app/'],
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  })
+);
+
 
 const port = 3000;
 const baseUrl = "https://api.mangadex.org";

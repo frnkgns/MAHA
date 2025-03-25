@@ -1,2 +1,4 @@
 /*
-  Content-Security-Policy: img-src 'self' https://uploads.mangadex.org;
+  Content-Security-Policy: img-src 'self' https://uploads.mangadex.org data:;
+  X-Content-Type-Options: nosniff
+  Access-Control-Allow-Origin: *
