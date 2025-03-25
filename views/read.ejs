@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Chapter Viewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -15,13 +16,16 @@
   </style>
 </head>
 <body>
-  <!-- <h2 class="text-2xl font-bold mb-4">Chapter Pages</h2> -->
+  <!-- ✅ Pagination for Previous/Next Chapters -->
+  <%- include("readPagination.ejs") %>
 
   <% images.forEach((imgUrl) => { %>
-    <img src="<%= imgUrl %>" alt="Chapter Page" class="sm:w-screen md:w-screen"/>
+    <img src="<%= imgUrl %>" alt="Chapter Page" class="sm:w-screen md:w-screen lg:w-[50rem]"/>
   <% }) %>
+  
+  <%- include("readPagination.ejs") %>
 
-  <a href="/" class="mt-5 inline-block text-blue-500">🔙 Back to Manga List</a>
-  <a href=""></a>
+  <a href="/" class="mt-5 inline-block text-blue-500 text-md">Home</a>
+
 </body>
 </html>

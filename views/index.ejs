@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maho</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/style.css" />
+    <!-- stylesheet -->
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"
+    />
+    <!-- Material Icons Link -->
+    <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+    />
+
 
 </head>
 <body class="bg-gray-700">
@@ -58,11 +70,11 @@
     <% }) %>
   </ul> 
 
-  <div id="motherchapterContainer" class="fixed inset-0 h-screen bg-gray-700 bg-opacity-80 justify-center flex hidden">
+  <div id="motherchapterContainer" class="fixed inset-0 h-screen bg-gray-700 bg-opacity-80 justify-center flex hidden" onclick="closeChapModal()">
     <div class="mt-10 w-80">
       <div class="justify-between flex bg-white items-center pl-4 rounded-tl-lg rounded-tr-lg">
         <p class="text-xs overflox-x-hidden" id="mangaTitle"></p>
-        <button onclick="closeChapModal()" class="p-4 rounded-lg">x</button>
+        <button onclick="closeChapModal()" class="btnCloseChap p-4 rounded-lg">x</button>
       </div>
       
       <div class="bg-white rounded-bl-lg rounded-br-lg pl-2 pb-2"> 
@@ -71,6 +83,11 @@
     </div>
   </div>  
 
+  <%- include("pagination.ejs") %>
+
+  <div id="loading" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="w-16 h-16 border-t-4 border-violet-500 border-solid rounded-full animate-spin"></div>
+  </div>
     
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
@@ -80,6 +97,10 @@
       }
 
       async function fetchChapters(mangaID, mangaTitle) {
+        document.getElementById("loading").classList.remove("hidden");
+    
+        // Hide spinner after 2 seconds (simulate loading time)
+
         try {
           const response = await fetch(`/chapter?id=${mangaID}`); // Send GET request to /chapter
           if (!response.ok) {
@@ -91,25 +112,18 @@
           console.log("Chapter data:", data); // Check data in console
 
           // ✅ Get chapter IDs and sort them correctly, then remove duplicate chapters
-          const chapterIDs = [];
+          chapterIDs = data.data
+          .sort((a, b) => Number(a.attributes.chapter) - Number(b.attributes.chapter))
+          .filter((chapter, index, self) =>
+            self.findIndex((ch) => Number(ch.attributes.chapter) === Number(chapter.attributes.chapter)) === index
+          );
 
-          data.data
-          .sort((a, b) => Number(a.attributes.chapter) - Number(b.attributes.chapter)) // Sort chapters
-          .forEach((chapter) => {
-            const chapterNumber = Number(chapter.attributes.chapter);
-
-            // ✅ Check if chapterNumber is already in chapterIDs
-            if (!chapterIDs.some((ch) => Number(ch.attributes.chapter) === chapterNumber)) {
-              chapterIDs.push(chapter); // ✅ Push only unique chapters
-            }
-          });
     
           console.log("Chapter IDs:", chapterIDs); // Print sorted and unique IDs
 
           const ChapCont = document.getElementById("chapterContainer");
           ChapCont.innerHTML = "";
           const MotherChapCont = document.getElementById("motherchapterContainer");
-          MotherChapCont.classList.remove("hidden");
 
           chapterIDs.forEach((chapter) => {
             const button = document.createElement("button");
@@ -118,16 +132,22 @@
 
             // ✅ Open chapter in new tab when clicked
             button.addEventListener("click", () => {
-              window.open(`/read?id=${chapter.id}`, "_blank");
+              localStorage.setItem("chapterIDs", JSON.stringify(chapterIDs)); // ✅ Store globally
+              window.location.href = `/read?id=${chapter.id}`;
             });
 
             ChapCont.appendChild(button);
           });
-    
+
+          //kapag nakapag loading na yung chapters then ito na
+          document.getElementById("loading").classList.add("hidden");
+          document.getElementById("motherchapterContainer").classList.remove("hidden");
+
         } catch (error) {
           console.error("Error fetching chapters:", error.message);
         }
       }
     </script>    
+    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js"></script>
   </body>
 </html>
