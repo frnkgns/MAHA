@@ -11,8 +11,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 // ✅ Update views and static paths
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "../views")); // Update for views folder
-app.use(express.static(path.join(__dirname, "../public"))); // Update for public folder
+app.set("views", path.join(__dirname, "./views")); // No need to go up one level
+app.use(express.static(path.join(__dirname, "./public"))); // No need to go up
 
 
 const port = 3000;
