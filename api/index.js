@@ -3,17 +3,14 @@ import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Fix __dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
 const app = express();
-// ✅ Update views and static paths
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "./views")); // No need to go up one level
-app.use(express.static(path.join(__dirname, "./public"))); // No need to go up
 
+// ✅ Correct views path
+app.set("views", path.join(__dirname, "..", "views"));
+app.set("view engine", "ejs");
 
 const port = 3000;
 const baseUrl = "https://api.mangadex.org";
@@ -40,7 +37,8 @@ app.get('/proxy/:id/:filename', async (req, res) => {
 
 // Home route to serve EJS page
 app.get('/', (req, res) => {
-  res.render('index.ejs');
+  // Provide an empty array as a fallback so that data.data exists.
+  res.render('index', { data: { data: [] } });
 });
 
 app.get("/chapter", async (req, res) => {
