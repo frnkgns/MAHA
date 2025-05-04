@@ -19,9 +19,13 @@
   <!-- ✅ Pagination for Previous/Next Chapters -->
   <%- include("readPagination.ejs") %>
 
-  <% images.forEach((imgUrl) => { %>
-    <img src="<%= imgUrl %>" alt="Chapter Page" class="sm:w-screen md:w-screen lg:w-[50rem]"/>
-  <% }) %>
+  <div class="bg-black">
+    <% images.forEach((imgUrl) => { %>
+      <img src="<%= imgUrl %>" alt="Chapter Page" class="w-screen"/>
+    <% }) %>
+  </div>
+
+
   
   <%- include("readPagination.ejs") %>
 

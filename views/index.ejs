@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maho</title>
+    <title>Maha</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/style.css" />
     <!-- stylesheet -->
@@ -40,35 +40,39 @@
         </div>
   </nav>
 
-  <ul class="grid grid-cols-3 ml-5 mt-2">
-    <% data.data.forEach(item => { %>
-      <li class="rounded-lg flex w-24 flex-col" onclick="fetchChapters('<%= item.id %>', '<%= item.attributes.title.en %>')">
-        <!-- <a href="https://api.mangadex.org/manga/<%= item.id %>/feed" class="block relative"> -->
-        <!-- <p class="w-[1rem]"><%= item.attributes.description.en %></p> -->
+  <div class="justify-center flex">
+    <ul class="grid grid-cols-3 mt-2 gap-5 flex items-center justify-center">
+      <% data.data.forEach(item => { %>
+        <li class="rounded-lg flex flex-col" onclick="fetchChapters('<%= item.id %>', '<%= item.attributes.title.en %>')">
+          <!-- <a href="https://api.mangadex.org/manga/<%= item.id %>/feed" class="block relative"> -->
+          <!-- <p class="w-[1rem]"><%= item.attributes.description.en %></p> -->
+    
+          <% if (item.coverFileName) { %>
+            <img
+              src="/proxy/<%= item.id %>/<%= item.coverFileName %>"
+              alt="Cover for <%= item.attributes.title.en %>"
+              class="h-24 lg:w-96 lg:h-96 rounded-lg object-cover"
+            />
   
-        <% if (item.coverFileName) { %>
-          <img
-            src="/proxy/<%= item.id %>/<%= item.coverFileName %>"
-            alt="Cover for <%= item.attributes.title.en %>"
-            class="h-44 rounded-lg"
-          />
-
-        <% } else { %>
-          <p>No cover available</p>
-        <% } %>
-
-        <div class="-translate-y-[1.5rem] bg-gray-700 opacity-80 p-1">
-          <div>
-            <p class=" text-xs text-white truncate"><%= item.attributes.title.en %></p>
+          <% } else { %>
+            <p>No cover available</p>
+          <% } %>
+  
+          <div class="-translate-y-[1.5rem] lg:-translate-y-[2.5rem] bg-gray-700 opacity-80 p-2">
+            <div>
+              <p class=" text-lg text-white truncate lg:w-96"><%= item.attributes.title.en %></p>
+            </div>
+            <!-- <div>
+              <h3><%= item.attributes.year %></h3>
+              <h3> Chapter <%= item.attributes.lastChapter %></h3>
+            </div> -->
           </div>
-          <!-- <div>
-            <h3><%= item.attributes.year %></h3>
-            <h3> Chapter <%= item.attributes.lastChapter %></h3>
-          </div> -->
-        </div>
-      </li>
-    <% }) %>
-  </ul> 
+        </li>
+      <% }) %>
+    </ul> 
+  </div>
+
+  
 
   <div id="motherchapterContainer" class="fixed inset-0 h-screen bg-gray-700 bg-opacity-80 justify-center flex hidden" onclick="closeChapModal()">
     <div class="mt-10 w-80">
@@ -114,9 +118,9 @@
           // ✅ Get chapter IDs and sort them correctly, then remove duplicate chapters
           chapterIDs = data.data
           .sort((a, b) => Number(a.attributes.chapter) - Number(b.attributes.chapter))
-          .filter((chapter, index, self) =>
-            self.findIndex((ch) => Number(ch.attributes.chapter) === Number(chapter.attributes.chapter)) === index
-          );
+          //.filter((chapter, index, self) =>
+          //  self.findIndex((ch) => Number(ch.attributes.chapter) === Number(chapter.attributes.chapter)) === index
+         // );
 
     
           console.log("Chapter IDs:", chapterIDs); // Print sorted and unique IDs

@@ -2,12 +2,12 @@
   <% if (currentPage > 1) { %>
     <!-- Previous Page Link -->
     <a href="/?page=<%= currentPage - 1 %>"
-       class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-900">
+       class="px-4 py-2 bg-gray-700 text-white rounded-lg">
       &lt; 
     </a>
   <% } else { %>
     <!-- Disabled Previous Link if on first page -->
-    <span class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg">
+    <span class="px-4 py-2 text-gray-500 rounded-lg">
       &lt; 
     </span>
   <% } %>
@@ -19,12 +19,12 @@
   <% if (hasNextPage) { %>
     <!-- Next Page Link -->
     <a href="/?page=<%= currentPage + 1 %>"
-       class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-900">
+       class="px-4 py-2 bg-gray-700 text-white rounded-lg">
        &gt;
     </a>
   <% } else { %>
     <!-- Disabled Next Link if no more pages -->
-    <span class="px-4 py-2 bg-gray-300 text-gray-500 rounded-lg">
+    <span class="px-4 py-2 text-gray-500 rounded-lg">
        &gt;
     </span>
   <% } %>

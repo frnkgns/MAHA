@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.static("public"));
 
-// ✅ Correct views path
+// Correct views path
 app.set("views", path.join(__dirname, "..", "views"));
 app.set("view engine", "ejs");
 
@@ -39,11 +39,11 @@ app.get('/proxy/:id/:filename', async (req, res) => {
 // Home route to serve EJS page
 app.get("/", async (req, res) => {
   const page = parseInt(req.query.page) || 1; // Get current page or default to 1
-  const limit = 12; // ✅ Set limit to 12 per page
+  const limit = 12; // Set limit to 12 per page
   const offset = (page - 1) * limit; // Calculate offset
 
   try {
-    // ✅ Fetch manga data for home page (default list or trending)
+    // Fetch manga data for home page (default list or trending)
     const resp = await axios({
       method: "GET",
       url: `${baseUrl}/manga`,
@@ -55,7 +55,7 @@ app.get("/", async (req, res) => {
 
     const searchResults = resp.data.data;
 
-    // ✅ Fetch cover data dynamically for home page
+    // Fetch cover data dynamically for home page
     const mangaData = await Promise.all(
       searchResults.map(async (item) => {
         const coverRel = item.relationships.find(
@@ -79,7 +79,7 @@ app.get("/", async (req, res) => {
       })
     );
 
-    // ✅ Render `index.ejs` with manga data for home page
+    // Render `index.ejs` with manga data for home page
     console.log("Manga data for home page:", mangaData);
     res.render("index.ejs", {
       data: { data: mangaData },
@@ -93,7 +93,6 @@ app.get("/", async (req, res) => {
     res.status(500).send("Error fetching manga for home.");
   }
 });
-
 
 app.get("/chapter", async (req, res) => {
   const mangaID = req.query.id;
